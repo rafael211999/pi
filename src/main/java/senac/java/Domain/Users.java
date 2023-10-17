@@ -9,10 +9,10 @@ public class Users {
 
     int Id;
 
-    public static String name = "";
-    public static String lastName = "";
-    public static String email = "";
-    public static String cpf = "";
+    public  String name = " ";
+    public  String lastName = " ";
+    public  String email = " ";
+    public  String cpf = " ";
 
 
 
@@ -71,29 +71,11 @@ public class Users {
     public JSONObject toJson(){
         JSONObject json = new JSONObject();
 
-        json.put("name", name);
-        json.put("last_name", lastName);
-        json.put("email", email);
-        json.put("cpf", cpf);
+
 
         return json;
     }
 
-
-//    public static Users getUser(int index, List<Users> usersList){
-//        List<Users> users = new ArrayList<>();
-//        users = usersList;
-//
-//
-//        if (index >= 0 && index < usersList.size()) {
-//            Users user = usersList.get(index);
-//            System.out.println( "name: " + name + ", email: " + email + ", cpf: " + cpf );
-//            return user;
-//        } else {
-//            System.out.println("Índice fora dos limites.");
-//            return null; // Ou uma indicação apropriada de que o índice está fora dos limites
-//        }
-//    };
 
 
     public static List<Users> getAllUsers(List<Users> usersList) {

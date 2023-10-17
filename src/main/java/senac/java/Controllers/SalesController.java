@@ -4,6 +4,7 @@ import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
 import senac.java.Domain.Sales;
+
 import senac.java.Domain.Users;
 import senac.java.Services.ResponseEndPoints;
 
@@ -26,6 +27,28 @@ public class SalesController {
 
             if ("GET".equals(exchange.getRequestMethod())) {
 
+                List<Sales> getAllFromArray = Sales.getAllSales(salesList);
+
+
+                if (!getAllFromArray.isEmpty()){
+                    for (Sales sale : getAllFromArray){
+                        System.out.println("Usuário: " + sale.getUser());
+                        System.out.println("Produto: " + sale.getProducts());
+                        System.out.println("Valor: " + sale.getValor());
+                        System.out.println("Venda final: " + sale.getFinishedSale());
+                        System.out.println("Desconto: " + sale.getDiscount());
+                        System.out.println("Venda: " + sale.getSale());
+                        System.out.println(" ");
+                        System.out.println("-------------------------------------------" );
+                        System.out.println(" ");
+                    }
+                    String response = "Dados encontrados com sucesso";
+                    res.enviarResponse(exchange, response, 200);
+                }else {
+                    String response = "Dados não encontrados";
+                    res.enviarResponse(exchange, response, 400);
+                }
+
                 res.enviarResponseJson(exchange, responseJason, 200);
             } else if ("POST".equals(exchange.getRequestMethod())) {
                 try (InputStream requestBody = exchange.getRequestBody()) {
@@ -33,7 +56,7 @@ public class SalesController {
                     JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
 
                     Sales sale = new Sales(
-                            json.getString("User"),
+                            json.getString("user"),
                             json.getString("produto"),
                             json.getDouble("valor"),
                             json.getBoolean("venda_final"),

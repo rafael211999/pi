@@ -3,6 +3,8 @@ package senac.java.Domain;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class Sales {
     int Id;
     public static String user = "";
@@ -82,7 +84,7 @@ public class Sales {
     public JSONObject toJson(){
         JSONObject json = new JSONObject();
 
-        json.put("User", user);
+        json.put("user", user);
         json.put("produto", products);
         json.put("valor", valor);
         json.put("venda_final", finishedSale);
@@ -93,4 +95,7 @@ public class Sales {
     }
 
 
+    public static List<Sales> getAllSales(List<Sales> salesList) {
+        return salesList;
+    }
 }
