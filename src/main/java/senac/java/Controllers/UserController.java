@@ -29,6 +29,8 @@ public class UserController {
             if ("GET".equals(exchange.getRequestMethod())) {
                 List<Users> getAllFromArray = Users.getAllUsers(usersList);
 
+
+
                 if (!getAllFromArray.isEmpty()) {
                     for (Users user : getAllFromArray) {
                         System.out.println("Name: " + user.getName());
@@ -39,7 +41,7 @@ public class UserController {
                         System.out.println("-------------------------------------------");
                         System.out.println(" ");
 
-
+                        res.enviarResponseJson(exchange,user.toJson()  , 200);
                     }
                 } else {
                     System.out.println("Valor não encontrado");

@@ -9,12 +9,10 @@ public class Users {
 
     int Id;
 
-    public  String name = " ";
-    public  String lastName = " ";
-    public  String email = " ";
-    public  String cpf = " ";
-
-
+    public String name = "";
+    public String lastName = "";
+    public String email = "";
+    public String cpf = "";
 
 
     //Constructor
@@ -68,20 +66,23 @@ public class Users {
     }
 
 
-    public JSONObject toJson(){
+    public JSONObject toJson() {
         JSONObject json = new JSONObject();
 
+
+        json.put("name", name);
+        json.put("last_name", lastName);
+        json.put("email", email);
+        json.put("cpf", cpf);
 
 
         return json;
     }
 
 
-
     public static List<Users> getAllUsers(List<Users> usersList) {
         return usersList;
     }
-
 
 
 }

@@ -5,9 +5,9 @@ import org.json.JSONObject;
 public class Products {
 
     int id;
-    public static String name = "";
-    public static String factory = "";
-    public static int quantity = 0;
+    public  String name = "";
+    public  String factory = "";
+    public  int quantity = 0;
 
 
     //Constructor
@@ -33,7 +33,7 @@ public class Products {
     }
 
 
-    public static String getFactory() {
+    public String getFactory() {
         return factory;
     }
 

@@ -7,12 +7,12 @@ import java.util.List;
 
 public class Sales {
     int Id;
-    public static String user = "";
-    public static String products = "";
-    public static double valor = 0;
-    public static boolean finishedSale;
-    public static double discount = 0;
-    public static String sale;
+    public  String user = "";
+    public  String products = "";
+    public  double valor = 0;
+    public  boolean finishedSale;
+    public double discount = 0;
+    public String sale;
 
 
     //Construtor

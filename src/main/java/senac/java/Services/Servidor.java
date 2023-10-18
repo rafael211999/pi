@@ -1,5 +1,8 @@
 package senac.java.Services;
 
+import com.sun.net.httpserver.Headers;
+import com.sun.net.httpserver.HttpExchange;
+import com.sun.net.httpserver.HttpHandler;
 import com.sun.net.httpserver.HttpServer;
 import senac.java.Controllers.ProductController;
 import senac.java.Controllers.SalesController;
@@ -13,13 +16,36 @@ public class Servidor {
     public  void apiServer() throws IOException {
         HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
 
-        server.createContext("/api/users", new UserController.UserHandler());
-        server.createContext("/api/products", new ProductController.ProductsHandler());
-        server.createContext("/api/sales", new SalesController.SalesPersonHandler());
+        HttpHandler userHandler = new UserController.UserHandler();
+        HttpHandler salesPersonHandler = new SalesController.SalesPersonHandler() ;
+        HttpHandler productHandler = new ProductController.ProductsHandler();
+
+        server.createContext("/api/users", exchange -> {
+            configureCorsHeaders(exchange);
+            userHandler.handle((exchange));
+        });
+        server.createContext("/api/products",exchange -> {
+            configureCorsHeaders(exchange);
+            productHandler.handle((exchange));
+        } );
+        server.createContext("/api/sales", exchange -> {
+            configureCorsHeaders(exchange);
+           salesPersonHandler.handle((exchange));
+        });
 
         server.setExecutor(null);
         server.start();
 
     }
+
+
+
+
+   private void configureCorsHeaders(HttpExchange exchange) {
+       Headers headers = exchange.getResponseHeaders();
+       headers.set("Access-Control-Allow-Origin", "*");
+       headers.set("Access-Control-Allow-Methods", "GET, OPTIONS, POST, PUT, DELETE");
+   }
+
 
 }
