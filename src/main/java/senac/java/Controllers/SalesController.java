@@ -78,6 +78,10 @@ public class SalesController {
             } else if ("DELETE".equals(exchange.getRequestMethod())) {
 
                 res.enviarResponseJson(exchange, responseJason, 200);
+            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1);
+                exchange.close();
+                return;
             } else {
                 res.enviarResponseJson(exchange, responseJason, 401);
             }

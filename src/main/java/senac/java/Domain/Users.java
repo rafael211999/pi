@@ -1,5 +1,6 @@
 package senac.java.Domain;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -79,6 +80,28 @@ public class Users {
         return json;
     }
 
+    public JSONObject arrayToJson(List<Users> usersList) {
+        JSONObject json = new JSONObject();
+
+
+        if (!usersList.isEmpty()) {
+            int contJson = 0;
+            for (Users user : usersList) {
+
+                JSONObject userJson = new JSONObject();
+                userJson.put("name", user.getName());
+                userJson.put("last_name", user.getLastName());
+                userJson.put("email", user.getEmail());
+                userJson.put("cpf", user.getCpf());
+
+                json.put(String.valueOf(contJson) ,userJson);
+                contJson++;
+            }
+            return json;
+        } else {
+            return null;
+        }
+    }
 
     public static List<Users> getAllUsers(List<Users> usersList) {
         return usersList;

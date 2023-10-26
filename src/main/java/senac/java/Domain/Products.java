@@ -2,12 +2,16 @@ package senac.java.Domain;
 
 import org.json.JSONObject;
 
+import java.util.List;
+
 public class Products {
 
     int id;
     public  String name = "";
     public  String factory = "";
-    public  int quantity = 0;
+    public  String quantity = "";
+
+
 
 
     //Constructor
@@ -15,7 +19,7 @@ public class Products {
     public  Products(){}
 
 
-    public Products(String name, String factory, int quantity){
+    public Products(String name, String factory, String quantity){
         this.name = name;
         this.factory = factory;
         this.quantity = quantity;
@@ -41,11 +45,11 @@ public class Products {
         this.factory = factory;
     }
 
-    public int getQuantity(){
+    public String getQuantity(){
         return quantity;
     }
 
-    public void setQuantity(int quantity){
+    public void setQuantity(String quantity){
         this.quantity = quantity;
     }
 
@@ -59,5 +63,33 @@ public class Products {
         json.put("quantidade", quantity);
 
         return json;
+    }
+
+
+    public JSONObject arrayToJson(List<Products> ProductsList) {
+        JSONObject json = new JSONObject();
+
+
+        if (!ProductsList.isEmpty()) {
+            int contJson = 0;
+            for (Products products : ProductsList) {
+
+                JSONObject productsJson = new JSONObject();
+                productsJson.put("name", products.getName());
+                productsJson.put("fabrica", products.getFactory());
+                productsJson.put("quantidade", products.getQuantity());
+
+                json.put(String.valueOf(contJson) ,productsJson);
+                contJson++;
+            }
+            return json;
+        } else {
+            return null;
+        }
+    }
+
+
+    public static List<Products> getAllProducts(List<Products> productsList) {
+        return productsList;
     }
 }
