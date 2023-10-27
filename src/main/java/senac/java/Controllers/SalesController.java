@@ -29,25 +29,11 @@ public class SalesController {
 
                 List<Sales> getAllFromArray = Sales.getAllSales(salesList);
 
+                Sales sale = new Sales();
 
-                if (!getAllFromArray.isEmpty()){
-                    for (Sales sale : getAllFromArray){
-                        System.out.println("Usuário: " + sale.getUser());
-                        System.out.println("Produto: " + sale.getProducts());
-                        System.out.println("Valor: " + sale.getValor());
-                        System.out.println("Venda final: " + sale.getFinishedSale());
-                        System.out.println("Desconto: " + sale.getDiscount());
-                        System.out.println("Venda: " + sale.getSale());
-                        System.out.println(" ");
-                        System.out.println("-------------------------------------------" );
-                        System.out.println(" ");
-                    }
-                    String response = "Dados encontrados com sucesso";
-                    res.enviarResponse(exchange, response, 200);
-                }else {
-                    String response = "Dados não encontrados";
-                    res.enviarResponse(exchange, response, 400);
-                }
+
+                res.enviarResponseJson(exchange, sale.arrayToJson(getAllFromArray), 200);
+
 
                 res.enviarResponseJson(exchange, responseJason, 200);
             } else if ("POST".equals(exchange.getRequestMethod())) {

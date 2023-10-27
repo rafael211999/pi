@@ -94,6 +94,30 @@ public class Sales {
         return json;
     }
 
+    public JSONObject arrayToJson(List<Sales> salesList) {
+        JSONObject json = new JSONObject();
+
+
+        if (!salesList.isEmpty()) {
+            int contJson = 0;
+            for (Sales sale : salesList) {
+
+                JSONObject salesJson = new JSONObject();
+                salesJson.put("user", sale.getUser());
+                salesJson.put("produto", sale.getProducts());
+                salesJson.put("valor", sale.getValor());
+                salesJson.put("venda_final", sale.getFinishedSale());
+                salesJson.put("desconto", sale.getDiscount());
+                salesJson.put("venda", sale.getSale());
+
+                json.put(String.valueOf(contJson) ,salesJson);
+                contJson++;
+            }
+            return json;
+        } else {
+            return null;
+        }
+    }
 
     public static List<Sales> getAllSales(List<Sales> salesList) {
         return salesList;
