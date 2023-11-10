@@ -15,7 +15,7 @@ import java.util.List;
 
 public class UserController {
 
-    static ResponseEndPoints res = new ResponseEndPoints();
+    static ResponseEndPoints res = new  ResponseEndPoints();
 
     public static List<Users> usersList = new ArrayList<>();
 

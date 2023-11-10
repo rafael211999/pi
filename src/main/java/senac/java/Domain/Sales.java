@@ -7,7 +7,7 @@ import java.util.List;
 
 public class Sales {
     int Id;
-    public  String user = "";
+    public  String usuario = "";
     public  String products = "";
     public  double valor = 0;
     public  boolean finishedSale;
@@ -20,8 +20,8 @@ public class Sales {
     public Sales() {
     }
 
-    public Sales(String user, String products, double valor, boolean finishedSale, double discount, String sale) {
-        this.user = user;
+    public Sales(String usuario, String products, double valor, boolean finishedSale, double discount, String sale) {
+        this.usuario = usuario;
         this.products = products;
         this.valor = valor;
         this.finishedSale = finishedSale;
@@ -32,12 +32,12 @@ public class Sales {
 
     //Getters and Setters
 
-    public String getUser() {
-        return user;
+    public String getUsuario() {
+        return usuario;
     }
 
-    public void setUser(String user) {
-        this.user = user;
+    public void setUsuario(String usuario) {
+        this.usuario = usuario;
     }
 
     public String getProducts() {
@@ -84,7 +84,7 @@ public class Sales {
     public JSONObject toJson(){
         JSONObject json = new JSONObject();
 
-        json.put("user", user);
+        json.put("user", usuario);
         json.put("produto", products);
         json.put("valor", valor);
         json.put("venda_final", finishedSale);
@@ -103,7 +103,7 @@ public class Sales {
             for (Sales sale : salesList) {
 
                 JSONObject salesJson = new JSONObject();
-                salesJson.put("user", sale.getUser());
+                salesJson.put("user", sale.getUsuario());
                 salesJson.put("produto", sale.getProducts());
                 salesJson.put("valor", sale.getValor());
                 salesJson.put("venda_final", sale.getFinishedSale());
