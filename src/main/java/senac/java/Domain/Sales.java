@@ -9,9 +9,9 @@ public class Sales {
     int Id;
     public  String usuario = "";
     public  String products = "";
-    public  double valor = 0;
+    public  float valor = 0;
     public  boolean finishedSale;
-    public double discount = 0;
+    public float discount = 0;
     public String sale;
 
 
@@ -20,7 +20,7 @@ public class Sales {
     public Sales() {
     }
 
-    public Sales(String usuario, String products, double valor, boolean finishedSale, double discount, String sale) {
+    public Sales(String usuario, String products, float valor, boolean finishedSale, float discount, String sale) {
         this.usuario = usuario;
         this.products = products;
         this.valor = valor;
@@ -52,7 +52,7 @@ public class Sales {
         return valor;
     }
 
-    public void setValor(double valor) {
+    public void setValor(float valor) {
         this.valor = valor;
     }
 
@@ -68,7 +68,7 @@ public class Sales {
         return discount;
     }
 
-    public void setDiscount(double discount) {
+    public void setDiscount(float discount) {
         this.discount = discount;
     }
 
@@ -84,7 +84,7 @@ public class Sales {
     public JSONObject toJson(){
         JSONObject json = new JSONObject();
 
-        json.put("user", usuario);
+        json.put("usuario", usuario);
         json.put("produto", products);
         json.put("valor", valor);
         json.put("venda_final", finishedSale);
@@ -103,7 +103,7 @@ public class Sales {
             for (Sales sale : salesList) {
 
                 JSONObject salesJson = new JSONObject();
-                salesJson.put("user", sale.getUsuario());
+                salesJson.put("usuario", sale.getUsuario());
                 salesJson.put("produto", sale.getProducts());
                 salesJson.put("valor", sale.getValor());
                 salesJson.put("venda_final", sale.getFinishedSale());

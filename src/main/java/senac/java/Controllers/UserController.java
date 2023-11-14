@@ -3,6 +3,7 @@ package senac.java.Controllers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
+import senac.java.DAL.UserDal;
 import senac.java.Domain.Users;
 import senac.java.Services.ResponseEndPoints;
 
@@ -51,6 +52,8 @@ public class UserController {
 
                 res.enviarResponseJson(exchange, responseJason, 200);
             } else if ("POST".equals(exchange.getRequestMethod())) {
+                UserDal userDal = new UserDal();
+
                 try (InputStream requestBody = exchange.getRequestBody()) {
 
                     JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
@@ -62,6 +65,7 @@ public class UserController {
                             json.getString("cpf")
                     );
                     usersList.add(user);
+                    userDal.inserirUsuario(user.name, user.lastName, user.email, user.cpf);
 
                     res.enviarResponseJson(exchange, user.toJson(), 201);
 

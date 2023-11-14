@@ -42,11 +42,11 @@ public class SalesController {
                     JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
 
                     Sales sale = new Sales(
-                            json.getString("user"),
+                            json.getString("usuario"),
                             json.getString("produto"),
-                            json.getDouble("valor"),
+                            json.getFloat("valor"),
                             json.getBoolean("venda_final"),
-                            json.getDouble("desconto"),
+                            json.getFloat("desconto"),
                             json.getString("venda")
                     );
                     salesList.add(sale);
