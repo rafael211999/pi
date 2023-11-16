@@ -117,7 +117,7 @@ public class UserDal {
     }
 
 
-    public int atualizarUsuario() throws SQLException {
+    public int atualizarUsuario(int id, String name, String lastName, String email, String cpf) throws SQLException {
         String sql = "UPDATE Users SET name = ?, lastName =  ?, email = ?, cpf = ? WHERE id = ?";
         int linhasAfetadas = 0;
 
@@ -139,7 +139,7 @@ public class UserDal {
     }
 
 
-    public int excluirUsuario() throws SQLException {
+    public int excluirUsuario(int id) throws SQLException {
         String sql = "DELETE FROM Users WHERE id = ?";
         int linhasAfetadas = 0;
 

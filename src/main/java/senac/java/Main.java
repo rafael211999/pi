@@ -7,7 +7,10 @@ import java.io.IOException;
 public class Main {
     public static void main(String[] args) throws IOException {
 
-        UserDal conexao = new UserDal();
+//        UserDal conexao = new UserDal();
+//        conexao.conectar();
+
+        ConexaoSQLServer conexao = new ConexaoSQLServer();
         conexao.conectar();
 
 

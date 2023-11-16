@@ -26,6 +26,33 @@ public class UserController {
     public static class UserHandler implements HttpHandler {
         String response = "";
 
+        @Override
+        public void handle(HttpExchange exchange) throws IOException {
+
+
+            if ("GET".equals(exchange.getRequestMethod())) {
+                doGet(exchange);
+
+            } else if ("POST".equals(exchange.getRequestMethod())) {
+                doPost(exchange);
+
+            } else if ("PUT".equals(exchange.getRequestMethod())) {
+                doPut(exchange);
+
+            } else if ("DELETE".equals(exchange.getRequestMethod())) {
+
+                doDelete(exchange);
+
+            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
+                exchange.sendResponseHeaders(204, -1);
+                exchange.close();
+                return;
+            } else {
+                res.enviarResponseJson(exchange, responseJason, 405);
+            }
+        }
+//                --------------------------------------------------------------------------------
+
         public void doGet(HttpExchange exchange) throws IOException {
             Users user = new Users();
             UserDal userDal = new UserDal();
@@ -41,7 +68,7 @@ public class UserController {
 
         }
 
-//        --------------------------------------------------------------------------------
+//                --------------------------------------------------------------------------------
 
 
         public void doPost(HttpExchange exchange) throws IOException {
@@ -86,10 +113,23 @@ public class UserController {
 
         public void doPut(HttpExchange exchange) throws IOException {
             UserDal userDal = new UserDal();
+            int myId = 0;
+            String myName = "";
+            String mySobrenome = "";
+            String myEmail = "";
+            String myCpf = "";
+
             int resp = 0;
 
-            try {
-                userDal.atualizarUsuario();
+            try(InputStream requestBody = exchange.getRequestBody()) {
+                JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
+                myId = Integer.parseInt(json.getString("id"));
+                myName = json.getString("name");
+                mySobrenome =  json.getString("last_name");
+                myEmail = json.getString("email");
+                myCpf = json.getString("cpf");
+
+                userDal.atualizarUsuario(myId, myName, mySobrenome, myEmail, myCpf);
 
                 if (resp == 0) {
                     response = "Houve um problema ao atualizar os dados do usuario";
@@ -114,9 +154,15 @@ public class UserController {
 
         public void doDelete(HttpExchange exchange) throws IOException {
             UserDal userDal = new UserDal();
+            int myId = 0;
             int resp = 0;
-            try {
-                userDal.excluirUsuario();
+
+
+            try (InputStream requestBody = exchange.getRequestBody()){
+
+                JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
+                myId = Integer.parseInt(json.getString("id"));
+                userDal.excluirUsuario(myId);
 
                 if (resp == 0) {
                     response = "Houve um problema ao deletar o usuario";
@@ -134,29 +180,6 @@ public class UserController {
         }
 
 
-        @Override
-        public void handle(HttpExchange exchange) throws IOException {
 
-
-            if ("GET".equals(exchange.getRequestMethod())) {
-                doGet(exchange);
-
-            } else if ("POST".equals(exchange.getRequestMethod())) {
-                doPost(exchange);
-
-            } else if ("PUT".equals(exchange.getRequestMethod())) {
-                doPut(exchange);
-
-            } else if ("DELETE".equals(exchange.getRequestMethod())) {
-                doDelete(exchange);
-
-            } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
-                exchange.sendResponseHeaders(204, -1);
-                exchange.close();
-                return;
-            } else {
-                res.enviarResponseJson(exchange, responseJason, 405);
-            }
-        }
     }
 }
