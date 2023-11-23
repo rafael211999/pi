@@ -14,7 +14,7 @@ import java.net.InetSocketAddress;
 public class Servidor {
 
     public void apiServer() throws IOException {
-        HttpServer server = HttpServer.create(new InetSocketAddress(8080), 0);
+        HttpServer server = HttpServer.create(new InetSocketAddress(9000), 0);
 
         HttpHandler userHandler = new UserController.UserHandler();
         HttpHandler salesPersonHandler = new SalesController.SalesPersonHandler();

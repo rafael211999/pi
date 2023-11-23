@@ -1,6 +1,5 @@
 package senac.java.DAL;
 
-import senac.java.Services.ConexaoSQLServer;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,28 +7,21 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class UserDal {
-
-
+public class SalesDal {
     public Connection conectar() {
-//        Aqui eu estou criando o meu espaço em memória para a minha conexao com o banco;
         Connection conexao = null;
 
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//            Aqui eu estou criando a minha String de conexão com o meu banco de dados;
 
             String url = "jdbc:sqlserver://localhost:1433;databaseName=pi;trustServerCertificate=true";
             String usuario = "user";
             String senha = "123456";
 
-            //Aqui eu estou fazendo a minha conexao com o meu banco de dados
             conexao = DriverManager.getConnection(url, usuario, senha);
 
-            //Aqui eu estou validando a minha conexao
             if (conexao != null) {
                 System.out.println("Conexão com o banco feita com sucesso");
-
                 return conexao;
 
             }
@@ -41,12 +33,11 @@ public class UserDal {
 //        Aqui eu estou verificando se teve algum erro de SQL e caso a conexao esteja aberta, ele vai fechar.
 //        finally {
 //            try {
-//                System.out.println("Entrei no try do finally");
 //                if (conexao != null && !conexao.isClosed()) {
+//
 //                    conexao.close();
 //                }
 //            } catch (SQLException e) {
-//                System.out.println("Entrei no catch do finally");
 //                System.out.println("O erro no finally foi: " + e);
 //            }
 //
@@ -54,21 +45,21 @@ public class UserDal {
         return conexao;
     }
 
-
-    //    Inserir - CREATE
-    public int inserirUsuario(String name, String lastName, String email, String cpf) throws SQLException {
+    public int inserirSales(String usuario, String products,float valor, boolean finishedSale, float discount, String sale) throws SQLException {
 //        Aqui eu estou criando a minha query para inserir os valores no banco
-        String sql = "INSERT INTO Users(name, lastName, email, cpf) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Sales(usuario, products, valor, finishedSale, discount, sale) VALUES (?, ?, ?, ?, ?)";
 
         int linhasAfetadas = 0;
         Connection conexao = conectar();
 
 //      O PreparedStatement faz a troca dos meus numeros pela informações
         try (PreparedStatement statement = conexao.prepareStatement(sql)) {
-            statement.setString(1, name);
-            statement.setString(2, lastName);
-            statement.setString(3, email);
-            statement.setString(4, cpf);
+            statement.setString(1, usuario);
+            statement.setString(2, products);
+            statement.setFloat(3, valor);
+            statement.setBoolean(4, finishedSale);
+            statement.setFloat(5, discount);
+            statement.setString(6, sale);
 
             linhasAfetadas = statement.executeUpdate();
 
@@ -76,6 +67,7 @@ public class UserDal {
 
             conexao.close();
             return linhasAfetadas;
+
 
         } catch (SQLException e) {
             System.out.println("O erro na inserção de dados foi: " + e);
@@ -86,26 +78,30 @@ public class UserDal {
         return linhasAfetadas;
     }
 
-    public ResultSet listarUsuario() throws SQLException {
-        String sql = "SELECT * FROM Users";
+    public ResultSet listarSales() throws SQLException {
+        String sql = "SELECT * FROM Sales";
         ResultSet result = null;
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
             result = statement.executeQuery();
 
-            System.out.println("Listagem dos usuarios: ");
+            System.out.println("Listagem de vendas: ");
 
             while (result.next()) {
                 int id = result.getInt("id");
-                String name = result.getString("name");
-                String lasteName = result.getString("lastName");
-                String email = result.getString("email");
-                String cpf = result.getString("cpf");
+                String usuario = result.getString("usuario");
+                String products = result.getString("products");
+                String valor = result.getString("valor");
+                String finishedSale = result.getString("finishedSale");
+                String discount = result.getString("discount");
+                String sale = result.getString("sale");
 
                 System.out.println("id: " + id);
-                System.out.println("name: " + name);
-                System.out.println("lastName: " + lasteName);
-                System.out.println("email: " + email);
-                System.out.println("cpf: " + cpf);
+                System.out.println("usuario: " + usuario);
+                System.out.println("products: " + products);
+                System.out.println("valor: " + valor);
+                System.out.println("finishedSale: " + finishedSale);
+                System.out.println("discount: " + discount);
+                System.out.println("sale: " + sale);
                 System.out.println(" ");
 
             }
@@ -118,17 +114,18 @@ public class UserDal {
         return result;
     }
 
-
-    public int atualizarUsuario(int id, String name, String lastName, String email, String cpf) throws SQLException {
-        String sql = "UPDATE Users SET name = ?, lastName =  ?, email = ?, cpf = ? WHERE id = ?";
+    public int atualizarSales(int id, String usuario, String products, float valor, boolean finishedSale,  float discount, String sale ) throws SQLException {
+        String sql = "UPDATE Sales SET usuario = ?, products =  ?, valor = ?, finishedSale = ?, discount = ?, sale = ?   WHERE id = ?";
         int linhasAfetadas = 0;
 
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
-//            statement.setString(1, name);
-//            statement.setString(2, lastName);
-//            statement.setString(3, email);
-//            statement.setString(4, cpf);
-//            statement.setInt(5, id);
+//            statement.setString(1, usuario);
+//            statement.setString(2, products);
+//            statement.setString(3, valor);
+//            statement.setString(4, finishedSale);
+//            statement.setString(5, discount);
+//            statement.setString(6, sale);
+//            statement.setInt(7, id);
 
             linhasAfetadas = statement.executeUpdate();
             System.out.println("Foram afetadas " + linhasAfetadas + " no banco de dados");
@@ -140,9 +137,8 @@ public class UserDal {
         return linhasAfetadas;
     }
 
-
-    public int excluirUsuario(int id) throws SQLException {
-        String sql = "DELETE FROM Users WHERE id = ?";
+    public int excluirSales(int id) throws SQLException {
+        String sql = "DELETE FROM Sales WHERE id = ?";
         int linhasAfetadas = 0;
 
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
@@ -159,4 +155,6 @@ public class UserDal {
 
         return linhasAfetadas;
     }
+
+
 }

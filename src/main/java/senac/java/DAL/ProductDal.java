@@ -8,41 +8,36 @@ import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 
-public class UserDal {
-
+public class ProductDal {
 
     public Connection conectar() {
-//        Aqui eu estou criando o meu espaço em memória para a minha conexao com o banco;
+//
         Connection conexao = null;
 
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//            Aqui eu estou criando a minha String de conexão com o meu banco de dados;
-
+//
             String url = "jdbc:sqlserver://localhost:1433;databaseName=pi;trustServerCertificate=true";
             String usuario = "user";
             String senha = "123456";
 
-            //Aqui eu estou fazendo a minha conexao com o meu banco de dados
             conexao = DriverManager.getConnection(url, usuario, senha);
 
-            //Aqui eu estou validando a minha conexao
             if (conexao != null) {
                 System.out.println("Conexão com o banco feita com sucesso");
-
                 return conexao;
 
             }
 
-//            Aqui eu estou verificando se tem algum erro na minha classe ou se teve erro na minha conexao
+//
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("O erro foi: " + e);
         }
-//        Aqui eu estou verificando se teve algum erro de SQL e caso a conexao esteja aberta, ele vai fechar.
 //        finally {
 //            try {
 //                System.out.println("Entrei no try do finally");
 //                if (conexao != null && !conexao.isClosed()) {
+//                    System.out.println("Entrei no if do finally");
 //                    conexao.close();
 //                }
 //            } catch (SQLException e) {
@@ -55,10 +50,9 @@ public class UserDal {
     }
 
 
-    //    Inserir - CREATE
-    public int inserirUsuario(String name, String lastName, String email, String cpf) throws SQLException {
+    public int inserirProdutos(String name, String factory, String quantity) throws SQLException {
 //        Aqui eu estou criando a minha query para inserir os valores no banco
-        String sql = "INSERT INTO Users(name, lastName, email, cpf) VALUES (?, ?, ?, ?)";
+        String sql = "INSERT INTO Products(name, factory, quantity) VALUES (?, ?, ?)";
 
         int linhasAfetadas = 0;
         Connection conexao = conectar();
@@ -66,9 +60,8 @@ public class UserDal {
 //      O PreparedStatement faz a troca dos meus numeros pela informações
         try (PreparedStatement statement = conexao.prepareStatement(sql)) {
             statement.setString(1, name);
-            statement.setString(2, lastName);
-            statement.setString(3, email);
-            statement.setString(4, cpf);
+            statement.setString(2, factory);
+            statement.setString(3, quantity);
 
             linhasAfetadas = statement.executeUpdate();
 
@@ -76,6 +69,7 @@ public class UserDal {
 
             conexao.close();
             return linhasAfetadas;
+
 
         } catch (SQLException e) {
             System.out.println("O erro na inserção de dados foi: " + e);
@@ -86,8 +80,9 @@ public class UserDal {
         return linhasAfetadas;
     }
 
-    public ResultSet listarUsuario() throws SQLException {
-        String sql = "SELECT * FROM Users";
+
+    public ResultSet listarProdutos() throws SQLException {
+        String sql = "SELECT * FROM Products";
         ResultSet result = null;
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
             result = statement.executeQuery();
@@ -97,15 +92,13 @@ public class UserDal {
             while (result.next()) {
                 int id = result.getInt("id");
                 String name = result.getString("name");
-                String lasteName = result.getString("lastName");
-                String email = result.getString("email");
-                String cpf = result.getString("cpf");
+                String factory = result.getString("factory");
+                String quantity = result.getString("quantity");
 
                 System.out.println("id: " + id);
                 System.out.println("name: " + name);
-                System.out.println("lastName: " + lasteName);
-                System.out.println("email: " + email);
-                System.out.println("cpf: " + cpf);
+                System.out.println("factory: " + factory);
+                System.out.println("quantity: " + quantity);
                 System.out.println(" ");
 
             }
@@ -119,16 +112,15 @@ public class UserDal {
     }
 
 
-    public int atualizarUsuario(int id, String name, String lastName, String email, String cpf) throws SQLException {
-        String sql = "UPDATE Users SET name = ?, lastName =  ?, email = ?, cpf = ? WHERE id = ?";
+    public int atualizarProdutos(int id, String name, String factory, String quantity) throws SQLException {
+        String sql = "UPDATE Products SET name = ?, factory =  ?, quantity = ? WHERE id = ?";
         int linhasAfetadas = 0;
 
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
 //            statement.setString(1, name);
-//            statement.setString(2, lastName);
-//            statement.setString(3, email);
-//            statement.setString(4, cpf);
-//            statement.setInt(5, id);
+//            statement.setString(2, factory);
+//            statement.setString(3, quantity);
+//            statement.setInt(4, id);
 
             linhasAfetadas = statement.executeUpdate();
             System.out.println("Foram afetadas " + linhasAfetadas + " no banco de dados");
@@ -141,8 +133,8 @@ public class UserDal {
     }
 
 
-    public int excluirUsuario(int id) throws SQLException {
-        String sql = "DELETE FROM Users WHERE id = ?";
+    public int excluirProdutos(int id) throws SQLException {
+        String sql = "DELETE FROM Products WHERE id = ?";
         int linhasAfetadas = 0;
 
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
@@ -159,4 +151,6 @@ public class UserDal {
 
         return linhasAfetadas;
     }
+
+
 }

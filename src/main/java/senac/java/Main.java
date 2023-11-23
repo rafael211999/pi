@@ -10,11 +10,11 @@ public class Main {
 //        UserDal conexao = new UserDal();
 //        conexao.conectar();
 
-        ConexaoSQLServer conexao = new ConexaoSQLServer();
-        conexao.conectar();
+//        ConexaoSQLServer conexao = new ConexaoSQLServer();
+//        conexao.conectar();
 
 
-//        Servidor api = new Servidor();
-//        api.apiServer();
+        Servidor api = new Servidor();
+        api.apiServer();
     }
 }

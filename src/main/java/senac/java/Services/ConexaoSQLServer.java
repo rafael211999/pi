@@ -14,19 +14,21 @@ public class ConexaoSQLServer {
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
 //            Aqui eu estou criando a minha String de conexão com o meu banco de dados;
-            String url = "jdbc:sqlserver://localhost:1433;databaseName=pi";
+            String url = "jdbc:sqlserver://localhost:1433;databaseName=pi;trustServerCertificate=true";
+//            integratedSecurity=true
 
-            String usuario = "SENACRJEDU/116128412023.1";
-            String senha = "senac@12841";
+            String usuario = "user";
+//            SENACRJEDU/116128412023.1
+            String senha = "123456";
 
             //Aqui eu estou fazendo a minha conexao com o meu banco de dados
-            conexao = DriverManager.getConnection(url);
+            conexao = DriverManager.getConnection(url, usuario, senha);
 
             //Aqui eu estou validando a minha conexao
             if (conexao != null) {
-
+                System.out.println("Conexão com o banco feita com sucesso");
                 return conexao;
-//                System.out.println("Conexão com o banco feita com sucesso");
+
             }
 
 //            Aqui eu estou verificando se tem algum erro na minha classe ou se teve erro na minha conexao

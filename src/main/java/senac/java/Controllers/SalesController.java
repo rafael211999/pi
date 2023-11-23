@@ -3,6 +3,8 @@ package senac.java.Controllers;
 import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpHandler;
 import org.json.JSONObject;
+import senac.java.DAL.SalesDal;
+import senac.java.DAL.UserDal;
 import senac.java.Domain.Sales;
 
 import senac.java.Domain.Users;
@@ -21,49 +23,24 @@ public class SalesController {
 
 
     public static class SalesPersonHandler implements HttpHandler {
+
+        String response = "";
+
         @Override
         public void handle(HttpExchange exchange) throws IOException {
 
 
             if ("GET".equals(exchange.getRequestMethod())) {
+               doGet(exchange);
 
-                List<Sales> getAllFromArray = Sales.getAllSales(salesList);
-
-                Sales sale = new Sales();
-
-
-                res.enviarResponseJson(exchange, sale.arrayToJson(getAllFromArray), 200);
-
-
-                res.enviarResponseJson(exchange, responseJason, 200);
             } else if ("POST".equals(exchange.getRequestMethod())) {
-                try (InputStream requestBody = exchange.getRequestBody()) {
+               doPost(exchange);
 
-                    JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
-
-                    Sales sale = new Sales(
-                            json.getString("usuario"),
-                            json.getString("produto"),
-                            json.getFloat("valor"),
-                            json.getBoolean("venda_final"),
-                            json.getFloat("desconto"),
-                            json.getString("venda")
-                    );
-                    salesList.add(sale);
-
-                    res.enviarResponseJson(exchange, sale.toJson(), 201);
-
-                } catch (Exception e) {
-                    String resposta = e.toString();
-                    System.out.println("O erro foi " + resposta);
-
-                }
             } else if ("PUT".equals(exchange.getRequestMethod())) {
+                doPut(exchange);
 
-                res.enviarResponseJson(exchange, responseJason, 200);
             } else if ("DELETE".equals(exchange.getRequestMethod())) {
-
-                res.enviarResponseJson(exchange, responseJason, 200);
+                doDelete(exchange);
             } else if ("OPTIONS".equals(exchange.getRequestMethod())) {
                 exchange.sendResponseHeaders(204, -1);
                 exchange.close();
@@ -72,5 +49,129 @@ public class SalesController {
                 res.enviarResponseJson(exchange, responseJason, 401);
             }
         }
+
+        public void doGet(HttpExchange exchange) throws IOException {
+            Sales sales = new Sales();
+            SalesDal salesDal = new SalesDal();
+            List<Sales> getAllFromArray = Sales.getAllSales(salesList);
+
+            try {
+                salesDal.listarSales();
+            } catch (Exception e) {
+                System.out.println("O erro foi: " + e);
+            }
+
+            res.enviarResponseJson(exchange, sales.arrayToJson(getAllFromArray), 200);
+
+        }
+
+        public void doPost(HttpExchange exchange) throws IOException {
+
+            SalesDal salesDal = new SalesDal();
+            int resp = 0;
+
+            try (InputStream requestBody = exchange.getRequestBody()) {
+
+                JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
+
+                Sales sales = new Sales(
+                        json.getString("usuario"),
+                        json.getString("produto"),
+                        json.getFloat("valor"),
+                        json.getBoolean("venda_final"),
+                        json.getFloat("desconto"),
+                        json.getString("venda")
+
+                );
+                salesList.add(sales);
+                resp = salesDal.inserirSales(sales.usuario, sales.products, sales.valor, sales.finishedSale, sales.discount, sales.sale);
+
+                if (resp == 0) {
+                    response = "Houve um problema ao criar o cadastro da venda";
+                    res.enviarResponse(exchange, response, 200);
+                } else if (resp > 0) {
+                    response = "Venda criada com sucesso";
+                    res.enviarResponse(exchange, response, 200);
+                }
+
+            } catch (Exception e) {
+                String resposta = e.toString();
+                System.out.println("O erro foi " + resposta);
+                res.enviarResponse(exchange, resposta, 200);
+
+
+            }
+
+        }
+
+        public void doPut(HttpExchange exchange) throws IOException {
+            SalesDal salesDal = new SalesDal();
+            int myId = 0;
+            String myUsuario = "";
+            String myProducts = "";
+            float myValor = 0;
+            boolean myFinishedSale = false;
+            float myDiscount = 0;
+            String mySale = "";
+
+            int resp = 0;
+
+            try (InputStream requestBody = exchange.getRequestBody()) {
+                JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
+                myId = Integer.parseInt(json.getString("id"));
+                myUsuario = json.getString("usuario");
+                myProducts = json.getString("products");
+                myValor = Float.parseFloat(json.getString("valor"));
+                myFinishedSale = Boolean.parseBoolean(json.getString("venda_final"));
+                myDiscount = Float.parseFloat(json.getString("desconto"));
+                mySale = json.getString("venda");
+
+                salesDal.atualizarSales(myId, myUsuario, myProducts, myValor, myFinishedSale, myDiscount, mySale);
+
+                if (resp == 0) {
+                    response = "Houve um problema ao atualizar os dados da venda";
+                    res.enviarResponse(exchange, response, 200);
+                } else if (resp > 0) {
+                    response = "Dados atualizados com sucesso";
+                    res.enviarResponse(exchange, response, 200);
+                }
+
+                res.enviarResponse(exchange, response, 200);
+            } catch (Exception e) {
+                System.out.println("O erro foi: " + e);
+                res.enviarResponse(exchange, "Erro ao atualizar vendas", 200);
+            }
+
+
+        }
+
+        public void doDelete(HttpExchange exchange) throws IOException {
+            SalesDal salesDal = new SalesDal();
+            int myId = 0;
+            int resp = 0;
+
+
+            try (InputStream requestBody = exchange.getRequestBody()) {
+
+                JSONObject json = new JSONObject(new String(requestBody.readAllBytes()));
+                myId = Integer.parseInt(json.getString("id"));
+                salesDal.excluirSales(myId);
+
+                if (resp == 0) {
+                    response = "Houve um problema ao deletar a venda";
+                    res.enviarResponse(exchange, response, 200);
+                } else if (resp > 0) {
+                    response = "Venda deletada com sucesso";
+                    res.enviarResponse(exchange, response, 200);
+                }
+
+            } catch (Exception e) {
+                System.out.println("O erro foi: " + e);
+                res.enviarResponse(exchange, "Erro ao deletar venda", 200);
+            }
+
+        }
+
+
     }
 }
