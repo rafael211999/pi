@@ -47,7 +47,7 @@ public class SalesDal {
 
     public int inserirSales(String usuario, String products,float valor, boolean finishedSale, float discount, String sale) throws SQLException {
 //        Aqui eu estou criando a minha query para inserir os valores no banco
-        String sql = "INSERT INTO Sales(usuario, products, valor, finishedSale, discount, sale) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO Sales(usuario, products, valor, finishedSale, discount, sale) VALUES (?, ?, ?, ?, ?, ?)";
 
         int linhasAfetadas = 0;
         Connection conexao = conectar();
