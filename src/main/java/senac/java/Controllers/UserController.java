@@ -22,9 +22,11 @@ public class UserController {
 
     static JSONObject responseJason = new JSONObject();
 
+    static String response = "";
+
 
     public static class UserHandler implements HttpHandler {
-        String response = "";
+
 
         @Override
         public void handle(HttpExchange exchange) throws IOException {
@@ -54,18 +56,28 @@ public class UserController {
 //                --------------------------------------------------------------------------------
 
         public void doGet(HttpExchange exchange) throws IOException {
-            Users user = new Users();
+//            Aqui eu estou criando a instacia das minhas classes para pode acessar meu metódos
             UserDal userDal = new UserDal();
-            List<Users> getAllFromArray = Users.getAllUsers(usersList);
+            Users user = new Users();
+            List<Users> userArray = new ArrayList<>();
+            JSONObject json;
+
 
             try {
-                userDal.listarUsuario();
+//                Aqui eu estou indo dentro da minha DAL para poder chamar o método que busca os dados no meu banco;
+//                Depois que chega a minha resposta, estou colocando a minha resposta dentro da minha variavel userArray;
+                userArray = userDal.listarUsuario();
+
+//                Aqui eu estou pegando os dados que foram passados para a minha variavel e convertendo em um json para poder enviar para o front;
+                json = user.arrayToJson(userArray);
+
+//               Aqui eu estou enviando os meus dados para  o frot
+                res.enviarResponseJson(exchange, json, 200);
             } catch (Exception e) {
                 System.out.println("O erro foi: " + e);
+                response = "Ocorreu um erro ao buscar os dados";
+                res.enviarResponse(exchange, response, 500);
             }
-
-            res.enviarResponseJson(exchange, user.arrayToJson(getAllFromArray), 200);
-
         }
 
 //                --------------------------------------------------------------------------------

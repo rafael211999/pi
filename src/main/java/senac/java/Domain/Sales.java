@@ -6,11 +6,11 @@ import org.json.JSONObject;
 import java.util.List;
 
 public class Sales {
-    int Id;
+    int id;
     public  String usuario = "";
     public  String products = "";
     public  float valor = 0;
-    public  boolean finishedSale;
+    public  String finishedSale;
     public float discount = 0;
     public String sale;
 
@@ -20,7 +20,7 @@ public class Sales {
     public Sales() {
     }
 
-    public Sales(String usuario, String products, float valor, boolean finishedSale, float discount, String sale) {
+    public Sales(String usuario, String products, float valor, String finishedSale, float discount, String sale) {
         this.usuario = usuario;
         this.products = products;
         this.valor = valor;
@@ -30,7 +30,28 @@ public class Sales {
 
     }
 
+    public Sales(int id, String usuario, String products, float valor, String finishedSale, float discount, String sale) {
+        this.id = id;
+        this.usuario = usuario;
+        this.products = products;
+        this.valor = valor;
+        this.finishedSale = finishedSale;
+        this.discount = discount;
+        this.sale = sale;
+
+    }
+
+
     //Getters and Setters
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getUsuario() {
         return usuario;
@@ -56,11 +77,11 @@ public class Sales {
         this.valor = valor;
     }
 
-    public boolean getFinishedSale() {
+    public String getFinishedSale() {
         return finishedSale;
     }
 
-    public void setFinishedSale(boolean finishedSale) {
+    public void setFinishedSale(String finishedSale) {
         this.finishedSale = finishedSale;
     }
 
@@ -103,6 +124,7 @@ public class Sales {
             for (Sales sale : salesList) {
 
                 JSONObject salesJson = new JSONObject();
+                salesJson.put("id", sale.getId());
                 salesJson.put("usuario", sale.getUsuario());
                 salesJson.put("produto", sale.getProducts());
                 salesJson.put("valor", sale.getValor());

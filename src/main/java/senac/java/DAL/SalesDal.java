@@ -1,11 +1,16 @@
 package senac.java.DAL;
 
 
+import org.json.JSONObject;
+import senac.java.Domain.Sales;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class SalesDal {
     public Connection conectar() {
@@ -45,7 +50,7 @@ public class SalesDal {
         return conexao;
     }
 
-    public int inserirSales(String usuario, String products,float valor, boolean finishedSale, float discount, String sale) throws SQLException {
+    public int inserirSales(String usuario, String products,float valor, String finishedSale, float discount, String sale) throws SQLException {
 //        Aqui eu estou criando a minha query para inserir os valores no banco
         String sql = "INSERT INTO Sales(usuario, products, valor, finishedSale, discount, sale) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -57,7 +62,7 @@ public class SalesDal {
             statement.setString(1, usuario);
             statement.setString(2, products);
             statement.setFloat(3, valor);
-            statement.setBoolean(4, finishedSale);
+            statement.setString(4, finishedSale);
             statement.setFloat(5, discount);
             statement.setString(6, sale);
 
@@ -78,9 +83,11 @@ public class SalesDal {
         return linhasAfetadas;
     }
 
-    public ResultSet listarSales() throws SQLException {
+    public List<Sales> listarSales() throws SQLException {
         String sql = "SELECT * FROM Sales";
         ResultSet result = null;
+        List<Sales> salesArray = new ArrayList<>();
+
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
             result = statement.executeQuery();
 
@@ -90,10 +97,13 @@ public class SalesDal {
                 int id = result.getInt("id");
                 String usuario = result.getString("usuario");
                 String products = result.getString("products");
-                String valor = result.getString("valor");
+                Float valor = result.getFloat("valor");
                 String finishedSale = result.getString("finishedSale");
-                String discount = result.getString("discount");
+                Float discount = result.getFloat("discount");
                 String sale = result.getString("sale");
+
+                Sales currentSale = new Sales(id, usuario, products, valor, finishedSale , discount, sale );
+                salesArray.add(currentSale);
 
                 System.out.println("id: " + id);
                 System.out.println("usuario: " + usuario);
@@ -105,13 +115,13 @@ public class SalesDal {
                 System.out.println(" ");
 
             }
-
-            return result;
+            result.close();
+            return salesArray;
 
         } catch (SQLException e) {
             System.out.println("O erro na listagem de dados foi: " + e);
         }
-        return result;
+        return salesArray;
     }
 
     public int atualizarSales(int id, String usuario, String products, float valor, boolean finishedSale,  float discount, String sale ) throws SQLException {

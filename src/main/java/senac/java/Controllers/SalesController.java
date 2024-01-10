@@ -51,17 +51,22 @@ public class SalesController {
         }
 
         public void doGet(HttpExchange exchange) throws IOException {
-            Sales sales = new Sales();
             SalesDal salesDal = new SalesDal();
-            List<Sales> getAllFromArray = Sales.getAllSales(salesList);
+            Sales sale = new Sales();
+            List<Sales> salesArray = new ArrayList<>();
+            JSONObject json;
 
             try {
-                salesDal.listarSales();
+                salesArray = salesDal.listarSales();
+                json = sale.arrayToJson(salesArray);
+                res.enviarResponseJson(exchange, json, 200);
             } catch (Exception e) {
                 System.out.println("O erro foi: " + e);
+                response = "Ocorreu um erro ao buscar os dados";
+                res.enviarResponse(exchange, response, 500);
             }
 
-            res.enviarResponseJson(exchange, sales.arrayToJson(getAllFromArray), 200);
+
 
         }
 
@@ -78,7 +83,7 @@ public class SalesController {
                         json.getString("usuario"),
                         json.getString("produto"),
                         json.getFloat("valor"),
-                        json.getBoolean("venda_final"),
+                        json.getString("venda_final"),
                         json.getFloat("desconto"),
                         json.getString("venda")
 

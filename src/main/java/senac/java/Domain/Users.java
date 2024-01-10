@@ -8,7 +8,7 @@ import java.util.List;
 
 public class Users {
 
-    int Id;
+    int id;
     public String name = "";
     public String lastName = "";
     public String email = "";
@@ -21,7 +21,6 @@ public class Users {
 
     }
 
-
     public Users(String name, String lastName, String email, String cpf) {
         this.name = name;
         this.lastName = lastName;
@@ -30,11 +29,33 @@ public class Users {
 
     }
 
+    public Users(int id, String name, String lastName, String email, String cpf) {
+        this.id = id;
+        this.name = name;
+        this.lastName = lastName;
+        this.email = email;
+        this.cpf = cpf;
+
+    }
+
+
+
 
     //Getters and Setters
+
+    public int getId(){
+        return id;
+    }
+
+    public void setId(int id){
+        this.id = id;
+    }
+
     public String getName() {
         return name;
     }
+
+
 
     public void setName(String name) {
         this.name = name;
@@ -88,6 +109,7 @@ public class Users {
             for (Users user : usersList) {
 
                 JSONObject userJson = new JSONObject();
+                userJson.put("id", user.getId());
                 userJson.put("name", user.getName());
                 userJson.put("last_name", user.getLastName());
                 userJson.put("email", user.getEmail());

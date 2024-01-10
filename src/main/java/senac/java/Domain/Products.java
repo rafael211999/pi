@@ -25,8 +25,24 @@ public class Products {
         this.quantity = quantity;
 
     }
+    public Products(int id, String name, String factory, String quantity){
+        this.id = id;
+        this.name = name;
+        this.factory = factory;
+        this.quantity = quantity;
+
+    }
 
     //Getters and Setters
+
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
 
     public String getName(){
         return name;
@@ -75,6 +91,7 @@ public class Products {
             for (Products products : ProductsList) {
 
                 JSONObject productsJson = new JSONObject();
+                productsJson.put("id", products.getId());
                 productsJson.put("name", products.getName());
                 productsJson.put("fabrica", products.getFactory());
                 productsJson.put("quantidade", products.getQuantity());

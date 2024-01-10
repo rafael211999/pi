@@ -1,5 +1,6 @@
 package senac.java.DAL;
 
+import senac.java.Domain.Products;
 import senac.java.Services.ConexaoSQLServer;
 
 import java.sql.Connection;
@@ -7,16 +8,16 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.util.ArrayList;
+import java.util.List;
 
 public class ProductDal {
 
     public Connection conectar() {
-//
         Connection conexao = null;
 
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
-//
             String url = "jdbc:sqlserver://localhost:1433;databaseName=pi;trustServerCertificate=true";
             String usuario = "user";
             String senha = "123456";
@@ -29,23 +30,9 @@ public class ProductDal {
 
             }
 
-//
         } catch (ClassNotFoundException | SQLException e) {
             System.out.println("O erro foi: " + e);
         }
-//        finally {
-//            try {
-//                System.out.println("Entrei no try do finally");
-//                if (conexao != null && !conexao.isClosed()) {
-//                    System.out.println("Entrei no if do finally");
-//                    conexao.close();
-//                }
-//            } catch (SQLException e) {
-//                System.out.println("Entrei no catch do finally");
-//                System.out.println("O erro no finally foi: " + e);
-//            }
-//
-//        }
         return conexao;
     }
 
@@ -81,9 +68,11 @@ public class ProductDal {
     }
 
 
-    public ResultSet listarProdutos() throws SQLException {
+    public List listarProdutos() throws SQLException {
         String sql = "SELECT * FROM Products";
         ResultSet result = null;
+
+        List<Products> productsArray = new ArrayList<>();
         try (PreparedStatement statement = conectar().prepareStatement(sql)) {
             result = statement.executeQuery();
 
@@ -95,6 +84,9 @@ public class ProductDal {
                 String factory = result.getString("factory");
                 String quantity = result.getString("quantity");
 
+                Products currentProducts = new Products(id, name, factory, quantity);
+                productsArray.add(currentProducts);
+
                 System.out.println("id: " + id);
                 System.out.println("name: " + name);
                 System.out.println("factory: " + factory);
@@ -102,13 +94,13 @@ public class ProductDal {
                 System.out.println(" ");
 
             }
-
-            return result;
+            result.close();
+            return productsArray;
 
         } catch (SQLException e) {
             System.out.println("O erro na listagem de dados foi: " + e);
         }
-        return result;
+        return productsArray;
     }
 
 

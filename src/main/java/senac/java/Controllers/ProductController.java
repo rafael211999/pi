@@ -55,16 +55,18 @@ public class ProductController {
         public void doGet(HttpExchange exchange) throws IOException {
             Products products = new Products();
             ProductDal productDal = new ProductDal();
-            List<Products> getAllFromArray = Products.getAllProducts(productsList);
+            List<Products> productsArray = new ArrayList<>();
+            JSONObject json;
 
             try {
-                productDal.listarProdutos();
+                productsArray = productDal.listarProdutos();
+                json = products.arrayToJson(productsArray);
+                res.enviarResponseJson(exchange, json, 200);
             } catch (Exception e) {
                 System.out.println("O erro foi: " + e);
+                response = "Ocorreu um erro ao buscar os dados";
+                res.enviarResponse(exchange, response, 500);
             }
-
-            res.enviarResponseJson(exchange, products.arrayToJson(getAllFromArray), 200);
-
         }
 
         public void doPost(HttpExchange exchange) throws IOException {
